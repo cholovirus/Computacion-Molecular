@@ -69,16 +69,30 @@ void calC(vector<pair<int,int>> &com,vvvp dir ,int c1,int c2){
   }
 }
 
-string camino(vector<pair<int,int>> com,string c2){
+string camino(vector<pair<int,int>> com,string c2, int cam){
   string h="";
-  
-  for (int i=0;i<com.size();i++){
-    if(com[i].second != com[i+1].second){
-      h=c2[com[i].second]+h; 
-    }else{
-      h="-"+h;
+
+  if (cam ==1){
+    for (int i=0;i<com.size();i++){
+
+      if(com[i].first != com[i+1].first){
+        h=c2[com[i].first]+h; 
+      }else{
+        h="-"+h;
+      }
+    }
+  }if (cam ==2){
+    for (int i=0;i<com.size();i++){
+
+      if(com[i].second != com[i+1].second){
+        h=c2[com[i].second]+h; 
+      }else{
+        h="-"+h;
+      }
     }
   }
+  
+  
   h.erase(0, 1);
   return h;
 }
@@ -111,7 +125,7 @@ int score(string c1,string c2){
   int sco=0;
   for(int i=0;i<c1.size();i++){
     if(c1[i]==c2[i]) sco++;
-    else if(c2[i] =='-') sco-=2;
+    else if(c2[i] =='-' or c1[i] == '-') sco-=2;
     else sco--;
   }
   cout<<"score: "<<sco<<endl;
@@ -129,6 +143,7 @@ void globalAlineament(string c1,string c2,int iter) {
   matriX(matrix,cad1,cad2,dir);
 
   string cadF="";
+  string cadF1="";
   vector<pair<int,int>> com;
   
   vector<pair<int,int>> best;
@@ -137,10 +152,11 @@ void globalAlineament(string c1,string c2,int iter) {
 
   for (int i=0;i<iter;i++){
     calC(com, dir,cad1.size(),cad2.size());
-    cadF=camino(com,cad2);
-    cout<<cad1.substr(1)<<endl;
+    cadF=camino(com,cad2,2);
+    cadF1=camino(com,cad1,1);
+    cout<<cadF1<<endl;
     cout<<cadF<<endl;
-    int  s=score(cad1.substr(1),cadF);
+    int  s=score(cadF1,cadF);
     if(i==0){
       bestscore=s;
       cadbest=cadF;
